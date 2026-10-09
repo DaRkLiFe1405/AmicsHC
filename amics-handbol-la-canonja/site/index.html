@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f2eb">
+  <meta name="description" content="Amics Handbol La Canonja: equips, calendari de la temporada i vida de club.">
+  <meta property="og:title" content="Amics Handbol La Canonja">
+  <meta property="og:description" content="Consulta els equips i els calendaris de cada secció d’Amics Handbol La Canonja.">
+  <title>Amics Handbol La Canonja — Handbol, equip i poble</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #191836;
+      --paper: #f4f2eb;
+      --white: #fffefa;
+      --blue: #3439b7;
+      --violet: #7553dd;
+      --lilac: #e2dcff;
+      --lime: #d9d0ff;
+      --orange: #7553dd;
+      --muted: #66657b;
+      --line: rgba(25, 24, 54, .16);
+      --font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font); }
+    a { color: inherit; }
+    button { font: inherit; }
+    .skip-link { position: fixed; z-index: 20; top: 8px; left: 8px; padding: 12px 16px; transform: translateY(-150%); border-radius: 8px; background: var(--lime); color: var(--ink); }
+    .skip-link:focus { transform: translateY(0); }
+    :focus-visible { outline: 3px solid var(--orange); outline-offset: 4px; }
+    .shell { width: min(1180px, calc(100% - 48px)); margin-inline: auto; }
+    .topbar { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; min-height: 82px; border-bottom: 1px solid var(--line); }
+    .brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; }
+    .brand-mark { display: grid; width: 48px; height: 48px; flex: 0 0 48px; place-items: center; overflow: hidden; padding: 3px; border: 1px solid var(--line); border-radius: 50%; background: var(--white); }
+    .brand-mark img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .brand-name { font-size: 14px; font-weight: 800; letter-spacing: -.035em; line-height: 1.05; }
+    .brand-name span { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; font-weight: 650; letter-spacing: .12em; text-transform: uppercase; }
+    .nav { display: flex; align-items: center; gap: clamp(16px, 2.5vw, 34px); }
+    .nav a { font-size: 12px; font-weight: 700; text-decoration: none; }
+    .nav a:hover, .footer-links a:hover { color: var(--violet); }
+    .top-actions { display: flex; align-items: center; gap: 14px; }
+    .menu-toggle { display: none; align-items: center; justify-content: center; width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 50%; background: transparent; color: var(--ink); cursor: pointer; }
+    .menu-toggle svg { width: 17px; height: 17px; }
+    .language { display: flex; padding: 3px; border: 1px solid var(--line); border-radius: 99px; }
+    .language button { min-width: 33px; padding: 7px 8px; border: 0; border-radius: 99px; background: transparent; color: var(--muted); font-size: 10px; font-weight: 800; cursor: pointer; }
+    .language button[aria-pressed="true"] { background: var(--ink); color: white; }
+    .round-link { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 0 18px; border: 1px solid var(--ink); border-radius: 99px; background: transparent; font-size: 12px; font-weight: 800; text-decoration: none; transition: background .2s, color .2s, transform .2s; }
+    .round-link:hover { transform: translateY(-2px); background: var(--ink); color: white; }
+    .round-link svg { width: 15px; height: 15px; }
+    .hero { position: relative; display: grid; grid-template-columns: 1.06fr .94fr; min-height: 590px; padding-block: 68px 76px; align-items: center; }
+    .hero-copy { position: relative; z-index: 1; padding-block: 24px; }
+    .eyebrow { display: flex; align-items: center; gap: 10px; margin: 0 0 22px; color: var(--blue); font-size: 10px; font-weight: 850; letter-spacing: .16em; text-transform: uppercase; }
+    .eyebrow::before { width: 24px; height: 2px; background: var(--orange); content: ""; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 650px; margin-bottom: 22px; font-size: clamp(56px, 8vw, 102px); font-weight: 850; letter-spacing: -.085em; line-height: .9; }
+    h1 em { color: var(--blue); font-style: normal; }
+    .hero-copy > p:not(.eyebrow) { max-width: 445px; margin-bottom: 29px; color: var(--muted); font-size: 16px; line-height: 1.7; }
+    .hero-buttons { display: flex; flex-wrap: wrap; gap: 11px; }
+    .button-primary { display: inline-flex; align-items: center; justify-content: center; gap: 11px; min-height: 51px; padding: 0 20px; border: 0; border-radius: 6px 18px 18px 18px; background: var(--blue); color: white; font-size: 12px; font-weight: 800; text-decoration: none; transition: transform .2s, background .2s; }
+    .button-primary:hover { transform: translateY(-2px); background: #24298c; }
+    .button-primary svg { width: 16px; height: 16px; }
+    .button-secondary { display: inline-flex; align-items: center; gap: 8px; min-height: 50px; padding: 0 17px; border-radius: 6px 18px 18px 18px; font-size: 12px; font-weight: 800; text-decoration: none; }
+    .button-secondary:hover { background: rgba(52,57,183,.08); }
+    .hero-art { position: relative; display: grid; min-height: 430px; place-items: center; isolation: isolate; }
+    .hero-art::before { position: absolute; z-index: -1; width: min(39vw, 440px); aspect-ratio: 1; border-radius: 50%; background: var(--lilac); content: ""; }
+    .hero-art::after { position: absolute; z-index: -1; right: 1%; bottom: 5%; width: 97px; aspect-ratio: 1; border-radius: 50%; background: var(--lime); content: ""; }
+    .hero-photo { position: relative; z-index: 1; display: block; width: min(100%, 560px); aspect-ratio: 3 / 2; border-radius: 8px 30px 8px 30px; object-fit: cover; box-shadow: 0 20px 55px rgba(25,24,54,.15); }
+    .hero-sticker { position: absolute; top: 9%; right: 2%; display: grid; width: 102px; aspect-ratio: 1; place-items: center; border: 1px solid rgba(25,24,54,.2); border-radius: 50%; background: var(--white); color: var(--blue); font-size: 9px; font-weight: 850; line-height: 1.55; letter-spacing: .1em; text-align: center; text-transform: uppercase; transform: rotate(11deg); }
+    .hero-sticker span { display: block; font-size: 21px; line-height: 1; }
+    .art-caption { position: absolute; bottom: 0; left: 0; color: var(--muted); font-size: 10px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
+    .marquee { overflow: hidden; border-block: 1px solid var(--line); background: var(--lime); }
+    .marquee-inner { display: flex; width: max-content; gap: 26px; padding: 14px 0; animation: drift 28s linear infinite; }
+    .marquee span { display: inline-flex; align-items: center; gap: 26px; font-size: 11px; font-weight: 900; letter-spacing: .15em; text-transform: uppercase; }
+    .marquee span::after { color: var(--blue); content: "✳"; font-size: 17px; }
+    @keyframes drift { to { transform: translateX(-50%); } }
+    .section { padding-block: 112px; }
+    .section-label { margin-bottom: 19px; color: var(--blue); font-size: 10px; font-weight: 850; letter-spacing: .16em; text-transform: uppercase; }
+    .about { display: grid; grid-template-columns: .78fr 1.22fr; gap: 9%; align-items: start; }
+    .about h2, .teams-heading h2, .match-copy h2, .join-copy h2 { margin-bottom: 0; font-size: clamp(40px, 5.4vw, 67px); font-weight: 820; letter-spacing: -.075em; line-height: .98; }
+    .about-copy { padding-top: 32px; }
+    .about-copy > p { max-width: 630px; color: var(--muted); font-size: 17px; line-height: 1.75; }
+    .values { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 27px; }
+    .pill { padding: 10px 14px; border: 1px solid var(--line); border-radius: 99px; font-size: 10px; font-weight: 800; letter-spacing: .04em; }
+    .teams-section { padding-block: 96px 110px; background: var(--ink); color: white; }
+    .teams-heading { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 40px; }
+    .teams-heading .section-label { color: var(--lime); }
+    .teams-heading h2 { max-width: 570px; }
+    .teams-heading > p { max-width: 310px; margin: 0 0 5px; color: rgba(255,255,255,.67); font-size: 14px; line-height: 1.65; }
+    .team-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 13px; }
+    .team-card { position: relative; display: flex; min-height: 248px; flex-direction: column; justify-content: space-between; overflow: hidden; padding: 23px; border: 1px solid rgba(255,255,255,.18); border-radius: 7px 23px 7px 23px; background: rgba(255,255,255,.045); }
+    .team-card:nth-child(2) { background: var(--blue); }
+    .team-card:nth-child(3) { background: var(--violet); color: white; }
+    .team-card::after { position: absolute; right: -35px; bottom: -50px; width: 145px; aspect-ratio: 1; border: 1px solid currentColor; border-radius: 50%; opacity: .17; content: ""; box-shadow: 0 0 0 14px transparent, 0 0 0 15px currentColor, 0 0 0 33px transparent, 0 0 0 34px currentColor; }
+    .team-index { display: flex; align-items: center; justify-content: space-between; color: rgba(255,255,255,.72); font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .team-card:nth-child(3) .team-index { color: rgba(255,255,255,.72); }
+    .team-index span:last-child { display: grid; width: 30px; height: 30px; place-items: center; border: 1px solid currentColor; border-radius: 50%; font-size: 15px; }
+    .team-card h3 { position: relative; z-index: 1; max-width: 220px; margin-bottom: 9px; font-size: 26px; font-weight: 800; letter-spacing: -.055em; line-height: 1.02; }
+    .team-card p { position: relative; z-index: 1; max-width: 255px; margin-bottom: 0; color: rgba(255,255,255,.72); font-size: 12px; line-height: 1.55; }
+    .team-card:nth-child(3) p { color: rgba(255,255,255,.72); }
+    .team-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .team-tab { width: 100%; min-height: 180px; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+    .team-tab:nth-child(3) .team-index, .team-tab:nth-child(3) p { color: rgba(255,255,255,.72); }
+    .team-tab[aria-selected="true"] { outline: 2px solid var(--lime); outline-offset: 3px; }
+    .team-tab:focus-visible { outline: 3px solid var(--orange); outline-offset: 4px; }
+    .schedules { padding-top: 0; }
+    .schedule-panel { padding: clamp(20px, 4vw, 36px); border-radius: 8px 28px 8px 28px; background: var(--white); color: var(--ink); }
+    .schedule-panel[hidden] { display: none; }
+    .schedule-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 22px; }
+    .schedule-heading .section-label { margin-bottom: 10px; }
+    .schedule-heading h3 { margin-bottom: 5px; font-size: clamp(25px, 3vw, 36px); font-weight: 850; letter-spacing: -.055em; line-height: 1; }
+    .schedule-heading p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .schedule-stamp { flex: 0 0 auto; padding: 9px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--blue); font-size: 10px; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+    .fixture-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; max-height: min(78vh, 820px); overflow: auto; padding: 3px; border: 1px solid var(--line); border-radius: 14px; background: #f8f7ff; overscroll-behavior: contain; scrollbar-color: var(--violet) #eeeaff; }
+    .fixture-card { display: grid; grid-template-columns: 66px minmax(0, 1fr); gap: 9px 12px; align-items: center; min-height: 92px; padding: 12px; border: 1px solid rgba(25,24,54,.1); border-radius: 12px; background: var(--white); }
+    .fixture-day { display: grid; gap: 7px; align-self: stretch; align-content: center; }
+    .fixture-round { color: var(--blue); font-size: 9px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+    .fixture-date { color: var(--muted); font-size: 10px; font-weight: 700; }
+    .fixture-main { min-width: 0; }
+    .fixture-game { display: grid; grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr); gap: 7px; align-items: center; }
+    .fixture-team { min-width: 0; font-size: 11px; font-weight: 760; line-height: 1.3; overflow-wrap: anywhere; }
+    .fixture-team:last-child { text-align: right; }
+    .fixture-team.is-amic { color: var(--blue); font-weight: 900; }
+    .fixture-result { display: grid; min-height: 28px; place-items: center; padding: 0 4px; border-radius: 8px; background: var(--lilac); color: var(--blue); font-size: 10px; font-weight: 900; white-space: nowrap; }
+    .fixture-meta { display: flex; flex-wrap: wrap; gap: 5px 9px; align-items: center; margin-top: 8px; color: var(--muted); font-size: 9px; line-height: 1.35; }
+    .fixture-status { padding: 4px 7px; border-radius: 999px; background: #eeeaff; color: var(--blue); font-weight: 850; }
+    .fixture-status[data-state="suspended"] { background: #f0eff5; color: #59586e; }
+    .fixture-status[data-state="played"] { background: var(--blue); color: white; }
+    .fixture-card.is-next { border-color: var(--violet); box-shadow: inset 3px 0 0 var(--violet); }
+    .calendar-note { margin: 12px 0 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
+    .calendar-pending { display: grid; min-height: 260px; place-items: center; padding: 28px; border: 1px dashed rgba(25,24,54,.24); border-radius: 14px; background: #f8f7f2; text-align: center; }
+    .calendar-pending strong { display: block; margin-bottom: 9px; font-size: 20px; letter-spacing: -.04em; }
+    .calendar-pending p { max-width: 470px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .match { display: grid; grid-template-columns: 1fr 1fr; gap: 10%; align-items: center; }
+    .match-copy > p:not(.section-label) { max-width: 470px; margin-block: 23px 27px; color: var(--muted); font-size: 15px; line-height: 1.75; }
+    .match-panel { position: relative; display: flex; min-height: 265px; flex-direction: column; justify-content: space-between; overflow: hidden; padding: 27px; border-radius: 8px 30px 8px 30px; background: var(--blue); color: white; }
+    .match-panel::after { position: absolute; top: -84px; right: -60px; width: 250px; aspect-ratio: 1; border: 1px solid rgba(255,255,255,.25); border-radius: 50%; content: ""; box-shadow: 0 0 0 17px transparent, 0 0 0 18px rgba(255,255,255,.25), 0 0 0 37px transparent, 0 0 0 38px rgba(255,255,255,.25); }
+    .panel-top { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 16px; color: rgba(255,255,255,.72); font-size: 10px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+    .match-panel h3 { position: relative; z-index: 1; max-width: 390px; margin: 28px 0; font-size: clamp(27px, 4vw, 40px); font-weight: 800; letter-spacing: -.06em; line-height: 1.03; }
+    .match-panel .round-link { position: relative; z-index: 1; width: fit-content; border-color: white; color: white; }
+    .match-panel .round-link:hover { background: white; color: var(--blue); }
+    .social-section { display: grid; grid-template-columns: .9fr 1.1fr; gap: 10%; align-items: center; padding-top: 15px; }
+    .social-copy > p:not(.section-label) { max-width: 450px; margin-block: 22px 24px; color: var(--muted); font-size: 15px; line-height: 1.75; }
+    .social-card { position: relative; display: flex; min-height: 295px; flex-direction: column; align-items: flex-start; justify-content: space-between; overflow: hidden; padding: 27px; border-radius: 8px 30px 8px 30px; background: var(--lilac); }
+    .social-card::after { position: absolute; right: -44px; bottom: -90px; width: 250px; aspect-ratio: 1; border: 1px solid rgba(52,57,183,.28); border-radius: 50%; content: ""; box-shadow: 0 0 0 15px transparent, 0 0 0 16px rgba(52,57,183,.24), 0 0 0 33px transparent, 0 0 0 34px rgba(52,57,183,.2); }
+    .social-top { position: relative; z-index: 1; display: flex; width: 100%; align-items: center; justify-content: space-between; color: var(--blue); font-size: 10px; font-weight: 850; letter-spacing: .13em; text-transform: uppercase; }
+    .social-top svg { width: 19px; height: 19px; }
+    .social-card h3 { position: relative; z-index: 1; max-width: 380px; margin: 26px 0; font-size: clamp(28px, 4vw, 40px); font-weight: 820; letter-spacing: -.06em; line-height: 1.03; }
+    .social-card .round-link { position: relative; z-index: 1; border-color: var(--blue); color: var(--blue); }
+    .social-card .round-link:hover { background: var(--blue); color: white; }
+    .visit { padding-top: 20px; }
+    .visit-inner { display: grid; grid-template-columns: 1.1fr .9fr; min-height: 390px; overflow: hidden; border-radius: 8px 30px 8px 30px; background: var(--lilac); }
+    .join-copy { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: clamp(28px, 5vw, 62px); }
+    .join-copy .section-label { color: var(--ink); }
+    .join-copy h2 { max-width: 470px; }
+    .join-copy > p:not(.section-label) { max-width: 450px; margin-block: 20px 24px; font-size: 14px; line-height: 1.7; }
+    .join-copy .button-primary { background: var(--ink); }
+    .join-copy .button-primary:hover { background: var(--blue); }
+    .venue-card { position: relative; display: flex; min-height: 100%; flex-direction: column; justify-content: space-between; overflow: hidden; padding: 30px; background: var(--lilac); }
+    .venue-card::before { position: absolute; top: 14%; right: -7%; width: 82%; aspect-ratio: 1; border: 1px solid rgba(52,57,183,.25); border-radius: 50%; content: ""; box-shadow: 0 0 0 17px transparent, 0 0 0 18px rgba(52,57,183,.22), 0 0 0 37px transparent, 0 0 0 38px rgba(52,57,183,.18); }
+    .venue-symbol { position: relative; z-index: 1; display: grid; width: 60px; height: 60px; place-items: center; border-radius: 50%; background: var(--blue); color: white; }
+    .venue-symbol svg { width: 26px; height: 26px; }
+    .venue-card > div:last-child { position: relative; z-index: 1; }
+    .venue-card h3 { max-width: 270px; margin-bottom: 7px; font-size: 23px; font-weight: 800; letter-spacing: -.045em; }
+    .venue-card p { margin-bottom: 17px; color: rgba(25,24,54,.72); font-size: 12px; line-height: 1.55; }
+    .venue-card a { font-size: 11px; font-weight: 850; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+    footer { margin-top: 100px; padding-block: 28px 34px; border-top: 1px solid var(--line); }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 22px; }
+    .footer-note { margin: 0; color: var(--muted); font-size: 10px; }
+    .footer-links { display: flex; gap: 18px; }
+    .footer-links a { font-size: 10px; font-weight: 750; text-decoration: none; }
+    .reveal { animation: rise .65s both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(13px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 850px) {
+      .nav { gap: 15px; }
+      .nav a { font-size: 11px; }
+      .topbar > .round-link { display: none; }
+      .hero { min-height: 520px; grid-template-columns: 1fr .8fr; }
+      .hero-art { min-height: 360px; }
+      .hero-sticker { right: -3%; width: 82px; font-size: 8px; }
+      .about { gap: 5%; }
+      .team-grid { gap: 9px; }
+      .team-card { min-height: 230px; padding: 18px; }
+      .team-card h3 { font-size: 22px; }
+    }
+    @media (max-width: 650px) {
+      .shell { width: min(100% - 34px, 500px); }
+      .topbar { min-height: 72px; }
+      .brand-mark { width: 40px; height: 40px; flex-basis: 40px; }
+      .brand-name { font-size: 12px; }
+      .menu-toggle { display: inline-flex; }
+      .nav { position: absolute; top: calc(100% + 8px); right: 0; left: 0; display: none; flex-direction: column; align-items: stretch; gap: 0; padding: 7px 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--white); box-shadow: 0 16px 40px rgba(25,24,54,.12); }
+      .nav.is-open { display: flex; }
+      .nav a { padding: 13px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+      .nav a:last-child { border-bottom: 0; }
+      .top-actions { margin-left: auto; }
+      .hero { display: flex; min-height: 0; flex-direction: column; align-items: stretch; padding-block: 52px 38px; }
+      .hero-copy { padding-block: 0; }
+      .eyebrow { margin-bottom: 17px; font-size: 9px; }
+      h1 { max-width: 510px; font-size: clamp(59px, 17vw, 86px); }
+      .hero-copy > p:not(.eyebrow) { max-width: 400px; font-size: 14px; }
+      .hero-art { min-height: 310px; margin-top: 18px; }
+      .hero-art::before { width: min(75vw, 330px); }
+      .hero-photo { width: 100%; }
+      .hero-sticker { top: 0; right: 6%; width: 75px; }
+      .art-caption { bottom: 0; left: 3%; font-size: 8px; }
+      .section { padding-block: 76px; }
+      .about { grid-template-columns: 1fr; gap: 12px; }
+      .about h2, .teams-heading h2, .match-copy h2, .join-copy h2 { font-size: clamp(42px, 12vw, 59px); }
+      .about-copy { padding-top: 10px; }
+      .about-copy > p { font-size: 15px; }
+      .teams-section { padding-block: 74px; }
+      .teams-heading { display: block; margin-bottom: 26px; }
+      .teams-heading > p { margin-top: 17px; font-size: 13px; }
+      .team-grid { grid-template-columns: 1fr; gap: 10px; }
+      .team-card { min-height: 196px; }
+      .team-card h3 { font-size: 26px; }
+      .team-tab { min-height: 154px; }
+      .schedule-heading { align-items: flex-start; flex-direction: column; }
+      .fixture-list { grid-template-columns: 1fr; max-height: 72vh; }
+      .match { grid-template-columns: 1fr; gap: 27px; }
+      .match-panel { min-height: 240px; padding: 22px; }
+      .social-section { grid-template-columns: 1fr; gap: 27px; padding-top: 0; }
+      .social-card { min-height: 255px; padding: 22px; }
+      .visit { padding-top: 0; }
+      .visit-inner { grid-template-columns: 1fr; }
+      .join-copy { padding: 32px 25px; }
+      .venue-card { min-height: 265px; padding: 25px; }
+      footer { margin-top: 68px; }
+      .footer-inner { align-items: flex-start; flex-direction: column; }
+      .footer-links { flex-wrap: wrap; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+
+    .sync-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: 0 0 18px; }
+    .sync-toolbar p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .sync-toolbar p[data-state="error"] { color: #9b273a; }
+    .sync-toolbar .round-link { min-height: 38px; flex: 0 0 auto; padding-inline: 15px; cursor: pointer; }
+    .sync-toolbar .round-link:disabled { opacity: .55; cursor: wait; }
+    .team-panels { display: grid; gap: 18px; }
+    .team-tab { min-height: 172px; }
+    .team-tab .team-card-copy h3 { font-size: clamp(20px, 2.5vw, 26px); }
+    .team-tab .team-card-copy p { max-width: 100%; }
+    .roster-section { margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--line); }
+    .roster-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+    .roster-heading h4 { margin: 0; font-size: 20px; font-weight: 850; letter-spacing: -.045em; }
+    .roster-heading span { color: var(--muted); font-size: 10px; font-weight: 750; }
+    .roster-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; margin: 0; padding: 0; list-style: none; }
+    .roster-player { min-height: 41px; padding: 11px 13px; border: 1px solid rgba(25,24,54,.1); border-radius: 9px; background: #f8f7ff; color: var(--ink); font-size: 11px; font-weight: 700; line-height: 1.4; }
+    .fixture-empty { grid-column: 1 / -1; min-height: 145px; padding: 25px; border: 1px dashed rgba(25,24,54,.24); border-radius: 14px; background: #f8f7f2; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .fixture-empty strong { display: block; margin-bottom: 7px; color: var(--ink); font-size: 17px; }
+    @media (max-width: 760px) { .roster-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 520px) { .sync-toolbar { align-items: flex-start; } .roster-grid { grid-template-columns: 1fr; } .fixture-list { grid-template-columns: 1fr; } }
+
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-ca="Salta al contingut" data-es="Saltar al contenido">Salta al contingut</a>
+  <header class="shell topbar">
+    <a class="brand" href="#inici" aria-label="Amics Handbol La Canonja — inici">
+      <span class="brand-mark" aria-hidden="true"><img src="https://balonmano.isquad.es/images/afiliacion_clubs/100639/square_73326d626f6b37737763.jpg" alt="" fetchpriority="high"></span>
+      <span class="brand-name">Amics Handbol<span data-ca="La Canonja · des de 2017" data-es="La Canonja · desde 2017">La Canonja · des de 2017</span></span>
+    </a>
+    <nav class="nav" id="primary-nav" aria-label="Navegació principal" data-ca-label="Navegació principal" data-es-label="Navegación principal">
+      <a href="#club" data-ca="El club" data-es="El club">El club</a>
+      <a href="#equips" data-ca="Equips" data-es="Equipos">Equips</a>
+      <a href="#actualitat" data-ca="Actualitat" data-es="Actualidad">Actualitat</a>
+      <a href="#partits" data-ca="Calendaris" data-es="Calendarios">Calendaris</a>
+      <a href="#visita" data-ca="On som" data-es="Dónde estamos">On som</a>
+    </nav>
+    <div class="top-actions">
+      <div class="language" role="group" aria-label="Idioma / Idioma">
+        <button type="button" data-lang="ca" aria-pressed="true">CA</button>
+        <button type="button" data-lang="es" aria-pressed="false">ES</button>
+      </div>
+      <button class="menu-toggle" id="menu-toggle" type="button" aria-controls="primary-nav" aria-expanded="false" aria-label="Obrir el menú" data-ca-label="Obrir el menú" data-es-label="Abrir el menú">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <a class="round-link topbar-link" href="https://www.instagram.com/amicshandbolcanonja/" target="_blank" rel="noopener noreferrer" aria-label="Instagram d’Amics Handbol La Canonja">
+        <span data-ca="Segueix-nos" data-es="Síguenos">Segueix-nos</span>
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="shell hero" id="inici">
+      <div class="hero-copy">
+        <p class="eyebrow" data-ca="Handbol · La Canonja · Tarragona" data-es="Balonmano · La Canonja · Tarragona">Handbol · La Canonja · Tarragona</p>
+        <h1 data-ca-html="La Canonja<br>juga en <em>equip.</em>" data-es-html="La Canonja<br>juega en <em>equipo.</em>">La Canonja<br>juga en <em>equip.</em></h1>
+        <p data-ca="Un club de poble, una pista plena d’energia i moltes ganes de compartir l’handbol. Vine a conèixer-nos i viu el pròxim partit des de la grada." data-es="Un club de pueblo, una pista llena de energía y muchas ganas de compartir el balonmano. Ven a conocernos y vive el próximo partido desde la grada.">Un club de poble, una pista plena d’energia i moltes ganes de compartir l’handbol. Vine a conèixer-nos i viu el pròxim partit des de la grada.</p>
+        <div class="hero-buttons">
+          <a class="button-primary" href="#partits"><span data-ca="Anem a la pista" data-es="Vamos a la pista">Anem a la pista</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a class="button-secondary" href="#club"><span data-ca="Coneix el club" data-es="Conoce el club">Coneix el club</span><span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+      <div class="hero-art" aria-label="Celebració de l’ascens d’Amics Handbol La Canonja amb jugadors, jugadores i afició" role="img" data-ca-label="Celebració de l’ascens d’Amics Handbol La Canonja amb jugadors, jugadores i afició" data-es-label="Celebración del ascenso de Amics Handbol La Canonja con jugadores y afición">
+        <img class="hero-photo" src="/images/ascenso_ahcjpeg.jpeg" alt="" aria-hidden="true" fetchpriority="high">
+        <div class="hero-sticker" aria-hidden="true"><div><span>AHC</span><span data-ca="A pista ens uneix" data-es="La pista nos une">A pista ens uneix</span></div></div>
+        <p class="art-caption" data-ca="Pista · passió · comunitat" data-es="Pista · pasión · comunidad">Pista · passió · comunitat</p>
+      </div>
+    </section>
+
+    <div class="marquee" aria-hidden="true"><div class="marquee-inner">
+      <span data-ca="Handbol i poble" data-es="Balonmano y pueblo">Handbol i poble</span><span data-ca="Fem equip" data-es="Hacemos equipo">Fem equip</span><span>La Canonja</span><span data-ca="Handbol i poble" data-es="Balonmano y pueblo">Handbol i poble</span><span data-ca="Fem equip" data-es="Hacemos equipo">Fem equip</span><span>La Canonja</span><span data-ca="Handbol i poble" data-es="Balonmano y pueblo">Handbol i poble</span><span data-ca="Fem equip" data-es="Hacemos equipo">Fem equip</span><span>La Canonja</span><span data-ca="Handbol i poble" data-es="Balonmano y pueblo">Handbol i poble</span><span data-ca="Fem equip" data-es="Hacemos equipo">Fem equip</span><span>La Canonja</span>
+    </div></div>
+
+    <section class="shell section about" id="club">
+      <div>
+        <p class="section-label" data-ca="01 / El club" data-es="01 / El club">01 / El club</p>
+        <h2 data-ca-html="Handbol fet<br>amb <em>il·lusió.</em>" data-es-html="Balonmano<br>hecho con <em>ilusión.</em>">Handbol fet<br>amb <em>il·lusió.</em></h2>
+      </div>
+      <div class="about-copy">
+        <p data-ca="Som Amics Handbol La Canonja: una entitat esportiva arrelada al poble i un punt de trobada per a qui estima aquest esport. Treballem perquè l’handbol es pugui viure a la pista, a la grada i en comunitat." data-es="Somos Amics Handbol La Canonja: una entidad deportiva arraigada en el pueblo y un punto de encuentro para quienes aman este deporte. Trabajamos para que el balonmano se viva en la pista, en la grada y en comunidad.">Som Amics Handbol La Canonja: una entitat esportiva arrelada al poble i un punt de trobada per a qui estima aquest esport. Treballem perquè l’handbol es pugui viure a la pista, a la grada i en comunitat.</p>
+        <div class="values" aria-label="Valors del club" data-ca-label="Valors del club" data-es-label="Valores del club">
+          <span class="pill" data-ca="Esport de base" data-es="Deporte base">Esport de base</span>
+          <span class="pill" data-ca="Compromís" data-es="Compromiso">Compromís</span>
+          <span class="pill" data-ca="La Canonja" data-es="La Canonja">La Canonja</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="teams-section" id="equips">
+      <div class="shell">
+        <div class="teams-heading">
+          <div><p class="section-label" data-ca="02 / Equips" data-es="02 / Equipos">02 / Equips</p><h2 data-ca-html="Cada equip<br>fa <em>club.</em>" data-es-html="Cada equipo<br>hace <em>club.</em>">Cada equip<br>fa <em>club.</em></h2></div>
+          <p data-ca="Tria una secció per veure el calendari de la temporada, amb les jornades i els partits a la mateixa pàgina." data-es="Elige una sección para ver el calendario de la temporada, con las jornadas y los partidos en esta misma página.">Tria una secció per veure el calendari de la temporada, amb les jornades i els partits a la mateixa pàgina.</p>
+        </div>
+        <div class="team-grid team-tabs" id="team-tabs" role="tablist" aria-label="Seccions del club" data-ca-label="Seccions del club" data-es-label="Secciones del club"></div>
+      </div>
+      <div class="shell section schedules" id="partits">
+        <div class="sync-toolbar">
+          <p id="sync-status" role="status" aria-live="polite">Connectant amb els resultats oficials…</p>
+          <button class="round-link" id="refresh-data" type="button"><span id="refresh-label">Actualitzar</span></button>
+        </div>
+        <div class="team-panels" id="team-panels">
+          <div class="calendar-pending"><div><strong>Carregant equips…</strong><p>Estem consultant les plantilles i les jornades de la temporada.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell section social-section" id="actualitat">
+      <div class="social-copy">
+        <p class="section-label" data-ca="03 / Vida de club" data-es="03 / Vida de club">03 / Vida de club</p>
+        <h2 data-ca-html="La temporada<br>també es viu<br><em>fora pista.</em>" data-es-html="La temporada<br>también se vive<br><em>fuera de pista.</em>">La temporada<br>també es viu<br><em>fora pista.</em></h2>
+        <p data-ca="Fotos, convocatòries i moments compartits: segueix el perfil oficial d’Amics Handbol per veure què passa al club." data-es="Fotos, convocatorias y momentos compartidos: sigue el perfil oficial de Amics Handbol para ver qué pasa en el club.">Fotos, convocatòries i moments compartits: segueix el perfil oficial d’Amics Handbol per veure què passa al club.</p>
+      </div>
+      <div class="social-card">
+        <div class="social-top"><span>@amicshandbolca</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.7"/><circle cx="17.5" cy="6.8" r="1" fill="currentColor"/></svg></div>
+        <h3 data-ca="Segueix la vida d’Amics H.C. des de dins." data-es="Sigue la vida de Amics H.C. desde dentro.">Segueix la vida d’Amics H.C. des de dins.</h3>
+        <a class="round-link" href="https://www.instagram.com/amicshandbolcanonja/" target="_blank" rel="noopener noreferrer"><span data-ca="Veure Instagram" data-es="Ver Instagram">Veure Instagram</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 15 15 5M6 5h9v9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </section>
+
+    <section class="shell visit" id="visita">
+      <div class="visit-inner">
+        <div class="join-copy">
+          <p class="section-label" data-ca="04 / Vine" data-es="04 / Ven">04 / Vine</p>
+          <h2 data-ca-html="La pròxima veu<br>de la grada<br>pot ser la teva." data-es-html="La próxima voz<br>de la grada<br>puede ser la tuya.">La pròxima veu<br>de la grada<br>pot ser la teva.</h2>
+          <p data-ca="Vols jugar, conèixer els equips o venir a animar? Escriu-nos per les xarxes i t’ajudarem a trobar el teu lloc al club." data-es="¿Quieres jugar, conocer los equipos o venir a animar? Escríbenos por redes y te ayudaremos a encontrar tu lugar en el club.">Vols jugar, conèixer els equips o venir a animar? Escriu-nos per les xarxes i t’ajudarem a trobar el teu lloc al club.</p>
+          <a class="button-primary" href="https://www.instagram.com/amicshandbolcanonja/" target="_blank" rel="noopener noreferrer"><span data-ca="Parlem a Instagram" data-es="Hablemos en Instagram">Parlem a Instagram</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h11m-4-4 4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+        <div class="venue-card">
+          <div class="venue-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.7"/></svg></div>
+          <div><h3>Poliesportiu Josep Canadell i Veciana</h3><p>Carrer Alcalde Marian Fonts, s/n<br>43110 La Canonja, Tarragona</p><a href="https://www.google.com/maps/search/?api=1&amp;query=Poliesportiu+Josep+Canadell+i+Veciana%2C+La+Canonja" target="_blank" rel="noopener noreferrer"><span data-ca="Com arribar-hi" data-es="Cómo llegar">Com arribar-hi</span> ↗</a></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell footer-inner">
+      <a class="brand" href="#inici" aria-label="Amics Handbol La Canonja — inici"><span class="brand-mark" aria-hidden="true"><img src="https://balonmano.isquad.es/images/afiliacion_clubs/100639/square_73326d626f6b37737763.jpg" alt="" loading="lazy"></span><span class="brand-name">Amics Handbol<span data-ca="La Canonja · handbol i poble" data-es="La Canonja · balonmano y pueblo">La Canonja · handbol i poble</span></span></a>
+      <p class="footer-note">© <span id="year">2026</span> Amics Handbol La Canonja</p>
+      <div class="footer-links"><a href="https://www.instagram.com/amicshandbolcanonja/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="https://x.com/amicshandbol" target="_blank" rel="noopener noreferrer">X ↗</a><a href="https://www.lacanonja.cat/ova_sev/entitats/" target="_blank" rel="noopener noreferrer" data-ca="Ajuntament" data-es="Ayuntamiento">Ajuntament</a></div>
+    </div>
+  </footer>
+
+
+  <script>
+    (() => {
+      const languageButtons = [...document.querySelectorAll("[data-lang]")];
+      const textNodes = [...document.querySelectorAll("[data-ca][data-es]")];
+      const htmlNodes = [...document.querySelectorAll("[data-ca-html][data-es-html]")];
+      const labelNodes = [...document.querySelectorAll("[data-ca-label][data-es-label]")];
+      const tabsNode = document.getElementById("team-tabs");
+      const panelsNode = document.getElementById("team-panels");
+      const statusNode = document.getElementById("sync-status");
+      const refreshButton = document.getElementById("refresh-data");
+      const refreshLabel = document.getElementById("refresh-label");
+      const menuButton = document.getElementById("menu-toggle");
+      const siteNav = document.getElementById("primary-nav");
+      let language = "ca";
+      let siteData = null;
+      let activeTeamKey = "";
+      let lastLoad = 0;
+      let loading = false;
+
+      const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[character]));
+      const formatDate = (iso) => {
+        if (!iso) return language === "ca" ? "Data pendent" : "Fecha pendiente";
+        return new Intl.DateTimeFormat(language === "ca" ? "ca-ES" : "es-ES", { day: "2-digit", month: "short" }).format(new Date(iso + "T12:00:00"));
+      };
+      const words = () => language === "ca" ? {
+        season: "Temporada", calendar: "Calendari", fixtures: "jornades", players: "jugadors", roster: "Plantilla",
+        played: "Finalitzat", pending: "Pendent", suspended: "Ajornat", home: "Local", away: "Visitant", time: "Hora pendent",
+        next: "Proper partit", noFixtures: "Encara no hi ha jornades publicades", noFixturesText: "Quan iSquad publiqui el calendari d’aquesta secció, els partits apareixeran aquí ordenats per data.",
+        noPlayers: "La plantilla encara no està publicada.", update: "Consulta automàtica cada 5 minuts mentre la pàgina és oberta.",
+        unavailable: "No s’ha pogut consultar iSquad. Torna-ho a provar d’aquí a uns minuts.", loading: "Connectant amb els resultats oficials…",
+        updated: "Actualitzat", refreshing: "Actualitzant…", refresh: "Actualitzar", source: "Dades de temporada 2026/27"
+      } : {
+        season: "Temporada", calendar: "Calendario", fixtures: "jornadas", players: "jugadores", roster: "Plantilla",
+        played: "Finalizado", pending: "Pendiente", suspended: "Aplazado", home: "Local", away: "Visitante", time: "Hora pendiente",
+        next: "Próximo partido", noFixtures: "Todavía no hay jornadas publicadas", noFixturesText: "Cuando iSquad publique el calendario de esta sección, los partidos aparecerán aquí ordenados por fecha.",
+        noPlayers: "La plantilla aún no está publicada.", update: "Consulta automática cada 5 minutos mientras la página está abierta.",
+        unavailable: "No se ha podido consultar iSquad. Vuelve a intentarlo dentro de unos minutos.", loading: "Conectando con los resultados oficiales…",
+        updated: "Actualizado", refreshing: "Actualizando…", refresh: "Actualizar", source: "Datos de temporada 2026/27"
+      };
+
+      function updateStaticLanguage() {
+        document.documentElement.lang = language;
+        document.title = language === "ca" ? "Amics Handbol La Canonja — Equips i calendari" : "Amics Handbol La Canonja — Equipos y calendario";
+        const description = document.querySelector('meta[name="description"]');
+        if (description) description.content = language === "ca"
+          ? "Amics Handbol La Canonja: equips, calendaris i plantilles sincronitzats amb la temporada."
+          : "Amics Handbol La Canonja: equipos, calendarios y plantillas sincronizados con la temporada.";
+        textNodes.forEach((node) => { node.textContent = node.dataset[language]; });
+        htmlNodes.forEach((node) => { node.innerHTML = node.dataset[language + "Html"]; });
+        labelNodes.forEach((node) => { node.setAttribute("aria-label", node.dataset[language + "Label"]); });
+        languageButtons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.lang === language)));
+        if (menuButton) menuButton.setAttribute("aria-label", menuButton.getAttribute("aria-expanded") === "true"
+          ? (language === "ca" ? "Tancar el menú" : "Cerrar el menú")
+          : menuButton.dataset[language + "Label"]);
+        refreshLabel.textContent = words().refresh;
+      }
+
+      function fixtureMarkup(team, fixture, nextRound) {
+        const ownHome = fixture.homeId === team.id;
+        const ownAway = fixture.awayId === team.id;
+        const homeName = ownHome ? "Amics H.C." : fixture.homeName;
+        const awayName = ownAway ? "Amics H.C." : fixture.awayName;
+        const result = fixture.homeScore !== "" && fixture.awayScore !== "" ? fixture.homeScore + "–" + fixture.awayScore : "VS";
+        const statusLabel = fixture.state === "played" ? words().played : fixture.state === "suspended" ? words().suspended : words().pending;
+        const timeLabel = fixture.time ? escapeHtml(fixture.time) + " h" : words().time;
+        const venue = fixture.venue ? '<span>' + escapeHtml(fixture.venue) + '</span>' : "";
+        const round = String(fixture.round).padStart(2, "0");
+        const ariaLabel = (language === "ca" ? "Jornada " : "Jornada ") + round + ": " + escapeHtml(homeName) + " contra " + escapeHtml(awayName);
+        return '<article class="fixture-card' + (fixture.round === nextRound ? ' is-next' : '') + '" role="listitem" aria-label="' + ariaLabel + '">' +
+          '<div class="fixture-day"><span class="fixture-round">Jornada ' + round + '</span><time class="fixture-date"' + (fixture.date ? ' datetime="' + escapeHtml(fixture.date) + '"' : '') + '>' + escapeHtml(formatDate(fixture.date)) + '</time></div>' +
+          '<div class="fixture-main"><div class="fixture-game"><span class="fixture-team' + (ownHome ? ' is-amic' : '') + '">' + escapeHtml(homeName) + '</span><span class="fixture-result">' + escapeHtml(result) + '</span><span class="fixture-team' + (ownAway ? ' is-amic' : '') + '">' + escapeHtml(awayName) + '</span></div>' +
+          '<div class="fixture-meta"><span class="fixture-status" data-state="' + escapeHtml(fixture.state) + '">' + escapeHtml(statusLabel) + '</span><span>' + (ownHome ? words().home : words().away) + '</span><span>' + timeLabel + '</span>' + venue + '</div></div></article>';
+      }
+
+      function renderTabs() {
+        if (!siteData?.teams?.length) return;
+        if (!siteData.teams.some((team) => team.key === activeTeamKey)) activeTeamKey = siteData.teams[0].key;
+        tabsNode.innerHTML = siteData.teams.map((team, index) => {
+          const selected = team.key === activeTeamKey;
+          const title = language === "ca" ? team.nameCa : team.nameEs;
+          const competition = language === "ca" ? team.competitionCa : team.competitionEs;
+          return '<button class="team-card team-tab" type="button" role="tab" id="tab-' + escapeHtml(team.key) + '" aria-controls="schedule-' + escapeHtml(team.key) + '" aria-selected="' + selected + '" tabindex="' + (selected ? '0' : '-1') + '" data-team-tab="' + escapeHtml(team.key) + '">' +
+            '<span class="team-index"><span>' + escapeHtml(words().season) + ' · ' + escapeHtml(siteData.season) + '</span><span>' + String(index + 1).padStart(2, "0") + '</span></span>' +
+            '<span class="team-card-copy"><h3>' + escapeHtml(title) + '</h3><p>' + escapeHtml(competition) + '</p></span></button>';
+        }).join("");
+        [...tabsNode.querySelectorAll("[data-team-tab]")].forEach((tab, index, tabs) => {
+          tab.addEventListener("click", () => selectTeam(tab.dataset.teamTab));
+          tab.addEventListener("keydown", (event) => {
+            let next = index;
+            if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (index + 1) % tabs.length;
+            else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (index - 1 + tabs.length) % tabs.length;
+            else if (event.key === "Home") next = 0;
+            else if (event.key === "End") next = tabs.length - 1;
+            else return;
+            event.preventDefault();
+            selectTeam(tabs[next].dataset.teamTab, true);
+          });
+        });
+      }
+
+      function renderPanels() {
+        if (!siteData?.teams?.length) return;
+        const panels = siteData.teams.map((team) => {
+          const active = team.key === activeTeamKey;
+          const title = language === "ca" ? team.nameCa : team.nameEs;
+          const competition = language === "ca" ? team.competitionCa : team.competitionEs;
+          const fixtures = team.fixtures || [];
+          const next = fixtures.find((fixture) => fixture.state === "pending" && fixture.date && new Date(fixture.date + "T23:59:00") >= new Date())?.round;
+          const calendar = fixtures.length
+            ? '<div class="fixture-list" role="list" aria-label="' + escapeHtml(language === "ca" ? "Partits de " + title : "Partidos de " + title) + '">' + fixtures.map((fixture) => fixtureMarkup(team, fixture, next)).join("") + '</div>'
+            : '<div class="fixture-empty"><strong>' + escapeHtml(words().noFixtures) + '</strong>' + escapeHtml(words().noFixturesText) + '</div>';
+          const players = team.players?.length
+            ? '<ol class="roster-grid">' + team.players.map((player) => '<li class="roster-player">' + escapeHtml(player) + '</li>').join("") + '</ol>'
+            : '<p class="calendar-note">' + escapeHtml(words().noPlayers) + '</p>';
+          return '<section class="schedule-panel" role="tabpanel" id="schedule-' + escapeHtml(team.key) + '" aria-labelledby="tab-' + escapeHtml(team.key) + '"' + (active ? '' : ' hidden') + '>' +
+            '<div class="schedule-heading"><div><p class="section-label">' + escapeHtml(words().calendar) + ' · ' + escapeHtml(siteData.season) + '</p><h3>' + escapeHtml(title) + '</h3><p>' + escapeHtml(competition) + '</p></div><span class="schedule-stamp">' + fixtures.length + ' ' + escapeHtml(words().fixtures) + '</span></div>' +
+            calendar + '<p class="calendar-note">' + escapeHtml(words().update) + '</p>' +
+            '<div class="roster-section"><div class="roster-heading"><h4>' + escapeHtml(words().roster) + '</h4><span>' + (team.players?.length || 0) + ' ' + escapeHtml(words().players) + '</span></div>' + players + '</div></section>';
+        });
+        panelsNode.innerHTML = panels.join("");
+      }
+
+      function renderData() {
+        if (!siteData?.teams?.length) return;
+        renderTabs();
+        renderPanels();
+      }
+
+      function selectTeam(key, moveFocus = false) {
+        activeTeamKey = key;
+        renderData();
+        if (moveFocus) tabsNode.querySelector('[data-team-tab="' + CSS.escape(key) + '"]')?.focus();
+        else document.getElementById("schedule-" + key)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      function setStatus(text, state = "ok") {
+        statusNode.textContent = text;
+        statusNode.dataset.state = state;
+      }
+
+      async function loadData(force = false) {
+        if (loading) return;
+        loading = true;
+        refreshButton.disabled = true;
+        refreshLabel.textContent = words().refreshing;
+        if (!siteData) setStatus(words().loading);
+        try {
+          const response = await fetch(force ? "/api/data?refresh=1" : "/api/data", { cache: "no-store" });
+          if (!response.ok) throw new Error("data unavailable");
+          siteData = await response.json();
+          if (!activeTeamKey && siteData.teams.length) activeTeamKey = siteData.teams[0].key;
+          renderData();
+          lastLoad = Date.now();
+          const updated = new Intl.DateTimeFormat(language === "ca" ? "ca-ES" : "es-ES", { hour: "2-digit", minute: "2-digit" }).format(new Date(siteData.generatedAt));
+          setStatus(words().updated + " " + updated + " · " + words().update);
+        } catch {
+          setStatus(words().unavailable, "error");
+        } finally {
+          loading = false;
+          refreshButton.disabled = false;
+          refreshLabel.textContent = words().refresh;
+        }
+      }
+
+      languageButtons.forEach((button) => button.addEventListener("click", () => {
+        language = button.dataset.lang === "es" ? "es" : "ca";
+        updateStaticLanguage();
+        renderData();
+        if (siteData) {
+          const updated = new Intl.DateTimeFormat(language === "ca" ? "ca-ES" : "es-ES", { hour: "2-digit", minute: "2-digit" }).format(new Date(siteData.generatedAt));
+          setStatus(words().updated + " " + updated + " · " + words().update);
+        }
+        try { localStorage.setItem("ahc-language", language); } catch {}
+      }));
+      refreshButton.addEventListener("click", () => loadData(true));
+      menuButton?.addEventListener("click", () => {
+        const expanded = menuButton.getAttribute("aria-expanded") !== "true";
+        menuButton.setAttribute("aria-expanded", String(expanded));
+        updateStaticLanguage();
+        siteNav.classList.toggle("is-open", expanded);
+      });
+      siteNav.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => {
+        siteNav.classList.remove("is-open");
+        menuButton?.setAttribute("aria-expanded", "false");
+      }));
+      let initialLanguage = "ca";
+      try { initialLanguage = localStorage.getItem("ahc-language") || "ca"; } catch {}
+      language = initialLanguage === "es" ? "es" : "ca";
+      updateStaticLanguage();
+      document.getElementById("year").textContent = String(new Date().getFullYear());
+      loadData();
+      window.setInterval(() => { if (document.visibilityState === "visible") loadData(); }, 5 * 60 * 1000);
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible" && Date.now() - lastLoad >= 5 * 60 * 1000) loadData();
+      });
+    })();
+  </script>
+</body>
+</html>
