@@ -267,6 +267,128 @@
     @media (max-width: 760px) { .roster-grid, .staff-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 520px) { .sync-toolbar { align-items: flex-start; } .roster-grid, .staff-grid { grid-template-columns: 1fr; } .fixture-list { grid-template-columns: 1fr; } }
 
+    @media (max-width: 650px) {
+      .shell { width: min(calc(100% - 28px), 500px); }
+      .topbar { position: sticky; top: 0; min-height: 64px; gap: 10px; background: rgba(244,242,235,.96); backdrop-filter: blur(12px); }
+      .brand { min-width: 0; gap: 9px; }
+      .brand-mark { width: 36px; height: 36px; flex-basis: 36px; }
+      .brand-name { font-size: 11px; white-space: nowrap; }
+      .brand-name span { font-size: 8px; letter-spacing: .08em; }
+      .top-actions { gap: 8px; }
+      .language { padding: 2px; }
+      .language button { min-width: 29px; padding: 6px 7px; }
+      .menu-toggle { width: 36px; height: 36px; }
+      .nav { top: calc(100% + 5px); padding-inline: 15px; }
+
+      .hero { padding-block: 38px 28px; }
+      .eyebrow { margin-bottom: 14px; font-size: 8px; letter-spacing: .13em; }
+      h1 { margin-bottom: 17px; font-size: clamp(50px, 15.5vw, 78px); }
+      .hero-copy > p:not(.eyebrow) { margin-bottom: 19px; font-size: 14px; line-height: 1.6; }
+      .hero-buttons { gap: 7px; }
+      .button-primary { min-height: 46px; padding-inline: 15px; }
+      .button-secondary { min-height: 46px; padding-inline: 12px; }
+      .hero-art { min-height: clamp(220px, 66vw, 290px); margin-top: 12px; }
+      .hero-art::before { width: min(76vw, 310px); }
+      .hero-photo { width: 100%; }
+      .hero-sticker { top: 1%; right: 5%; width: 68px; font-size: 7px; }
+      .hero-sticker span { font-size: 17px; }
+      .art-caption { left: 2%; font-size: 7px; }
+
+      .section { padding-block: 58px; }
+      .about { gap: 8px; }
+      .about h2, .teams-heading h2, .match-copy h2, .join-copy h2 { font-size: clamp(39px, 11.5vw, 54px); }
+      .about-copy { padding-top: 7px; }
+      .about-copy > p { margin-bottom: 16px; font-size: 14px; line-height: 1.65; }
+      .values { gap: 7px; margin-top: 18px; }
+      .pill { padding: 8px 11px; font-size: 9px; }
+
+      .teams-section { padding-block: 56px 44px; }
+      .teams-heading { margin-bottom: 18px; }
+      .teams-heading > p { margin-top: 12px; font-size: 12px; line-height: 1.55; }
+      .team-grid.team-tabs { display: flex; gap: 9px; overflow-x: auto; margin-inline: -14px; padding: 6px 14px 13px; scroll-snap-type: x mandatory; scrollbar-color: rgba(255,255,255,.55) rgba(255,255,255,.12); scrollbar-width: thin; }
+      .team-tab { flex: 0 0 min(78vw, 270px); width: min(78vw, 270px); min-height: 130px; padding: 14px 15px; scroll-snap-align: start; }
+      .team-card::after { right: -29px; bottom: -42px; width: 112px; }
+      .team-tab .team-index { font-size: 8px; }
+      .team-tab .team-index span:last-child { width: 26px; height: 26px; font-size: 13px; }
+      .team-tab .team-card-copy h3 { margin-bottom: 5px; font-size: 20px; }
+      .team-tab .team-card-copy p { font-size: 10px; line-height: 1.4; }
+      .team-tab[aria-selected="true"] { outline-offset: 2px; }
+      #club, #equips, #actualitat, #visita, .schedules, .schedule-panel { scroll-margin-top: 72px; }
+      .schedules { padding-block: 0 36px; }
+      .sync-toolbar { align-items: center; gap: 10px; margin-bottom: 12px; }
+      .sync-toolbar p { max-width: 245px; font-size: 10px; line-height: 1.4; }
+      .sync-toolbar .round-link { min-height: 36px; padding-inline: 11px; font-size: 10px; }
+      .schedule-panel { padding: 16px 13px; border-radius: 8px 20px 8px 20px; }
+      .schedule-heading { align-items: flex-start; flex-direction: row; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
+      .schedule-heading > div { min-width: 0; flex: 1 1 190px; }
+      .schedule-heading .section-label { margin-bottom: 8px; font-size: 8px; }
+      .schedule-heading h3 { font-size: clamp(23px, 7vw, 30px); line-height: 1.05; overflow-wrap: anywhere; }
+      .schedule-heading p { font-size: 10px; }
+      .schedule-stamp { padding: 7px 9px; font-size: 8px; }
+      .fixture-list { max-height: none; overflow: visible; padding: 0; border: 0; background: transparent; gap: 7px; }
+      .fixture-card { grid-template-columns: minmax(0, 1fr); gap: 9px; min-height: 0; padding: 11px; }
+      .fixture-day { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+      .fixture-round, .fixture-date { font-size: 9px; }
+      .fixture-game { grid-template-columns: minmax(0, 1fr) 46px minmax(0, 1fr); gap: 6px; }
+      .fixture-team { font-size: 10px; line-height: 1.25; }
+      .fixture-result { min-height: 27px; font-size: 9px; }
+      .fixture-meta { gap: 5px 7px; margin-top: 7px; font-size: 8px; }
+      .fixture-status { padding: 4px 6px; }
+      .calendar-note { font-size: 10px; }
+
+      .roster-section { margin-top: 23px; padding-top: 18px; }
+      .roster-heading { align-items: center; gap: 7px; margin-bottom: 10px; }
+      .roster-heading h4 { font-size: 17px; }
+      .roster-heading span { font-size: 9px; text-align: right; }
+      .roster-grid, .staff-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+      .roster-player, .staff-member { padding: 9px 10px; font-size: 10px; }
+      .staff-section { margin-top: 19px; padding-top: 17px; }
+      .staff-member strong { font-size: 10px; }
+      .staff-member span { font-size: 9px; }
+
+      .match { gap: 21px; }
+      .match-copy > p:not(.section-label) { margin-block: 16px 19px; font-size: 14px; line-height: 1.65; }
+      .match-panel { min-height: 210px; padding: 19px; }
+      .match-panel h3 { margin: 20px 0; font-size: clamp(25px, 8vw, 34px); }
+      .social-section { gap: 20px; }
+      .social-copy > p:not(.section-label) { margin-block: 15px 0; font-size: 14px; line-height: 1.65; }
+      .instagram-card { margin-inline: -5px; padding: 10px; border-radius: 8px 22px 8px 22px; }
+      .instagram-card-top { gap: 8px; font-size: 8px; letter-spacing: .07em; }
+      .instagram-account { gap: 6px; }
+      .instagram-account svg { width: 17px; height: 17px; }
+      .instagram-profile-link { font-size: 8px; }
+      .instagram-post-frame { min-height: 310px; margin-top: 12px; }
+      .instagram-post-status { padding: 20px 14px; font-size: 12px; }
+      .instagram-post-frame blockquote.instagram-media { min-width: 280px !important; }
+      .instagram-latest-link { margin-top: 11px; font-size: 12px; }
+
+      .visit { padding-top: 0; }
+      .visit-inner { border-radius: 8px 22px 8px 22px; }
+      .join-copy { padding: 28px 20px; }
+      .join-copy > p:not(.section-label) { margin-block: 16px 19px; font-size: 13px; line-height: 1.6; }
+      .venue-card { min-height: 220px; padding: 20px; }
+      footer { margin-top: 44px; }
+      .footer-inner { gap: 13px; }
+      .footer-links { gap: 12px; }
+    }
+
+    @media (max-width: 370px) {
+      .shell { width: calc(100% - 24px); }
+      .topbar { gap: 6px; }
+      .brand { gap: 7px; }
+      .brand-mark { width: 33px; height: 33px; flex-basis: 33px; }
+      .brand-name { font-size: 10px; }
+      .brand-name span { font-size: 7px; }
+      .top-actions { gap: 6px; }
+      .language button { min-width: 26px; padding-inline: 5px; }
+      .menu-toggle { width: 34px; height: 34px; }
+      .team-tab { flex-basis: min(80vw, 270px); width: min(80vw, 270px); }
+      .team-grid.team-tabs { margin-inline: -12px; padding-inline: 12px; }
+      .schedule-panel { padding-inline: 11px; }
+      .fixture-card { padding: 9px; }
+      .fixture-game { grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr); }
+    }
+
   </style>
 </head>
 <body>
