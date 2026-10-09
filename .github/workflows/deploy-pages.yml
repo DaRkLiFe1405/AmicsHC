@@ -24,13 +24,9 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: amics-handbol-la-canonja/package-lock.json
       - name: Build static site and current calendar data
-        run: npm ci && npm run build:pages
+        run: npm run build:pages
         working-directory: amics-handbol-la-canonja
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
@@ -46,6 +42,8 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
