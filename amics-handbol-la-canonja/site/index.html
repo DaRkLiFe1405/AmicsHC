@@ -154,6 +154,11 @@
     .instagram-post-status { max-width: 330px; margin: 0; padding: 26px; color: var(--muted); font-size: 13px; line-height: 1.7; text-align: center; }
     .instagram-post-frame blockquote.instagram-media { width: 100% !important; max-width: 540px !important; min-width: 280px !important; margin: 0 auto !important; }
     .instagram-latest-link { display: flex; justify-content: center; margin: 14px auto 2px; color: var(--blue); font-size: 13px; font-weight: 800; text-underline-offset: 4px; }
+    @media (min-width: 851px) {
+      .social-section .instagram-card { width: 100%; max-width: 410px; justify-self: end; }
+      .social-section .instagram-post-frame { overflow: visible; }
+      .social-section .instagram-post-frame blockquote.instagram-media { max-width: 372px !important; }
+    }
     .visit { padding-top: 20px; }
     .visit-inner { display: grid; grid-template-columns: 1.1fr .9fr; min-height: 390px; overflow: hidden; border-radius: 8px 30px 8px 30px; background: var(--lilac); }
     .join-copy { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: clamp(28px, 5vw, 62px); }
