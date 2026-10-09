@@ -32,7 +32,8 @@
     .skip-link:focus { transform: translateY(0); }
     :focus-visible { outline: 3px solid var(--orange); outline-offset: 4px; }
     .shell { width: min(1180px, calc(100% - 48px)); margin-inline: auto; }
-    .topbar { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; min-height: 82px; border-bottom: 1px solid var(--line); }
+    .topbar { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; min-height: 82px; border-bottom: 1px solid var(--line); background: rgba(244,242,235,.96); backdrop-filter: blur(12px); }
+    #inici, #club, #equips, #actualitat, #visita, .schedules, .schedule-panel { scroll-margin-top: 98px; }
     .brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; }
     .brand-mark { display: grid; width: 48px; height: 48px; flex: 0 0 48px; place-items: center; overflow: hidden; padding: 3px; border: 1px solid var(--line); border-radius: 50%; background: var(--white); }
     .brand-mark img { display: block; width: 100%; height: 100%; object-fit: contain; }
@@ -113,6 +114,7 @@
     .schedule-heading h3 { margin-bottom: 5px; font-size: clamp(25px, 3vw, 36px); font-weight: 850; letter-spacing: -.055em; line-height: 1; }
     .schedule-heading p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
     .schedule-stamp { flex: 0 0 auto; padding: 9px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--blue); font-size: 10px; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+    .schedule-stamp-mobile { display: none; }
     .fixture-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; max-height: min(78vh, 820px); overflow: auto; padding: 3px; border: 1px solid var(--line); border-radius: 14px; background: #f8f7ff; overscroll-behavior: contain; scrollbar-color: var(--violet) #eeeaff; }
     .fixture-card { display: grid; grid-template-columns: 66px minmax(0, 1fr); gap: 9px 12px; align-items: center; min-height: 92px; padding: 12px; border: 1px solid rgba(25,24,54,.1); border-radius: 12px; background: var(--white); }
     .fixture-day { display: grid; gap: 7px; align-self: stretch; align-content: center; }
@@ -178,7 +180,7 @@
     @media (max-width: 850px) {
       .nav { gap: 15px; }
       .nav a { font-size: 11px; }
-      .topbar > .round-link { display: none; }
+      .topbar .topbar-link { display: none; }
       .hero { min-height: 520px; grid-template-columns: 1fr .8fr; }
       .hero-art { min-height: 360px; }
       .hero-sticker { right: -3%; width: 82px; font-size: 8px; }
@@ -313,7 +315,7 @@
       .team-tab .team-card-copy h3 { margin-bottom: 5px; font-size: 20px; }
       .team-tab .team-card-copy p { font-size: 10px; line-height: 1.4; }
       .team-tab[aria-selected="true"] { outline-offset: 2px; }
-      #club, #equips, #actualitat, #visita, .schedules, .schedule-panel { scroll-margin-top: 72px; }
+      #inici, #club, #equips, #actualitat, #visita, .schedules, .schedule-panel { scroll-margin-top: 72px; }
       .schedules { padding-block: 0 36px; }
       .sync-toolbar { align-items: center; gap: 10px; margin-bottom: 12px; }
       .sync-toolbar p { max-width: 245px; font-size: 10px; line-height: 1.4; }
@@ -325,7 +327,10 @@
       .schedule-heading h3 { font-size: clamp(23px, 7vw, 30px); line-height: 1.05; overflow-wrap: anywhere; }
       .schedule-heading p { font-size: 10px; }
       .schedule-stamp { padding: 7px 9px; font-size: 8px; }
+      .schedule-stamp-desktop { display: none; }
+      .schedule-stamp-mobile { display: inline; }
       .fixture-list { max-height: none; overflow: visible; padding: 0; border: 0; background: transparent; gap: 7px; }
+      .fixture-list .fixture-card:not(.is-current) { display: none; }
       .fixture-card { grid-template-columns: minmax(0, 1fr); gap: 9px; min-height: 0; padding: 11px; }
       .fixture-day { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
       .fixture-round, .fixture-date { font-size: 9px; }
@@ -670,7 +675,7 @@
         }
       }
 
-      function fixtureMarkup(team, fixture, nextRound) {
+      function fixtureMarkup(team, fixture, nextRound, currentRound) {
         const ownHome = fixture.homeId === team.id;
         const ownAway = fixture.awayId === team.id;
         const homeName = ownHome ? "Amics H.C." : fixture.homeName;
@@ -681,7 +686,7 @@
         const venue = fixture.venue ? '<span>' + escapeHtml(fixture.venue) + '</span>' : "";
         const round = String(fixture.round).padStart(2, "0");
         const ariaLabel = (language === "ca" ? "Jornada " : "Jornada ") + round + ": " + escapeHtml(homeName) + " contra " + escapeHtml(awayName);
-        return '<article class="fixture-card' + (fixture.round === nextRound ? ' is-next' : '') + '" role="listitem" aria-label="' + ariaLabel + '">' +
+        return '<article class="fixture-card' + (fixture.round === nextRound ? ' is-next' : '') + (fixture.round === currentRound ? ' is-current' : '') + '" role="listitem" aria-label="' + ariaLabel + '">' +
           '<div class="fixture-day"><span class="fixture-round">Jornada ' + round + '</span><time class="fixture-date"' + (fixture.date ? ' datetime="' + escapeHtml(fixture.date) + '"' : '') + '>' + escapeHtml(formatDate(fixture.date)) + '</time></div>' +
           '<div class="fixture-main"><div class="fixture-game"><span class="fixture-team' + (ownHome ? ' is-amic' : '') + '">' + escapeHtml(homeName) + '</span><span class="fixture-result">' + escapeHtml(result) + '</span><span class="fixture-team' + (ownAway ? ' is-amic' : '') + '">' + escapeHtml(awayName) + '</span></div>' +
           '<div class="fixture-meta"><span class="fixture-status" data-state="' + escapeHtml(fixture.state) + '">' + escapeHtml(statusLabel) + '</span><span>' + (ownHome ? words().home : words().away) + '</span><span>' + timeLabel + '</span>' + venue + '</div></div></article>';
@@ -720,7 +725,10 @@
           const title = language === "ca" ? team.nameCa : team.nameEs;
           const competition = language === "ca" ? team.competitionCa : team.competitionEs;
           const fixtures = team.fixtures || [];
-          const next = fixtures.find((fixture) => fixture.state === "pending" && fixture.date && new Date(fixture.date + "T23:59:00") >= new Date())?.round;
+          const nextFixture = fixtures.find((fixture) => fixture.state === "pending" && fixture.date && new Date(fixture.date + "T23:59:00") >= new Date());
+          const next = nextFixture?.round;
+          const currentFixture = nextFixture || fixtures.find((fixture) => fixture.state === "pending") || [...fixtures].reverse().find((fixture) => fixture.state === "played") || fixtures[0];
+          const currentRound = currentFixture?.round;
           const topScorers = new Set((team.topScorers || []).map(normalizePlayerName));
           const topScorerLabel = language === "ca" ? "Màxim golejador" : "Máximo goleador";
           const scorerSourceLink = team.scorersUrl
@@ -730,7 +738,7 @@
           const staffCount = language === "ca" ? "persones" : "personas";
           const staffEmpty = language === "ca" ? "La federació encara no ha publicat el cos tècnic." : "La federación todavía no ha publicado el cuerpo técnico.";
           const calendar = fixtures.length
-            ? '<div class="fixture-list" role="list" aria-label="' + escapeHtml(language === "ca" ? "Partits de " + title : "Partidos de " + title) + '">' + fixtures.map((fixture) => fixtureMarkup(team, fixture, next)).join("") + '</div>'
+            ? '<div class="fixture-list" role="list" aria-label="' + escapeHtml(language === "ca" ? "Partits de " + title : "Partidos de " + title) + '">' + fixtures.map((fixture) => fixtureMarkup(team, fixture, next, currentRound)).join("") + '</div>'
             : '<div class="fixture-empty"><strong>' + escapeHtml(words().noFixtures) + '</strong>' + escapeHtml(words().noFixturesText) + '</div>';
           const players = team.players?.length
             ? '<ol class="roster-grid">' + team.players.map((player) => {
@@ -745,7 +753,7 @@
             ? '<ul class="staff-grid" aria-label="' + escapeHtml(staffTitle) + '">' + team.staff.map((member) => '<li class="staff-member"><strong>' + escapeHtml(member.name) + '</strong><span>' + escapeHtml(staffRoleLabel(member.role)) + '</span></li>').join("") + '</ul>'
             : '<p class="calendar-note">' + escapeHtml(staffEmpty) + '</p>';
           return '<section class="schedule-panel" role="tabpanel" id="schedule-' + escapeHtml(team.key) + '" aria-labelledby="tab-' + escapeHtml(team.key) + '"' + (active ? '' : ' hidden') + '>' +
-            '<div class="schedule-heading"><div><p class="section-label">' + escapeHtml(words().calendar) + ' · ' + escapeHtml(siteData.season) + '</p><h3>' + escapeHtml(title) + '</h3><p>' + escapeHtml(competition) + '</p></div><span class="schedule-stamp">' + fixtures.length + ' ' + escapeHtml(words().fixtures) + '</span></div>' +
+            '<div class="schedule-heading"><div><p class="section-label">' + escapeHtml(words().calendar) + ' · ' + escapeHtml(siteData.season) + '</p><h3>' + escapeHtml(title) + '</h3><p>' + escapeHtml(competition) + '</p></div><span class="schedule-stamp"><span class="schedule-stamp-desktop">' + fixtures.length + ' ' + escapeHtml(words().fixtures) + '</span><span class="schedule-stamp-mobile">' + escapeHtml(currentRound ? "Jornada " + String(currentRound).padStart(2, "0") : "Jornada actual") + '</span></span></div>' +
             calendar + '<p class="calendar-note">' + escapeHtml(words().update) + '</p>' +
             '<div class="roster-section"><div class="roster-heading"><h4>' + escapeHtml(words().roster) + '</h4><span>' + (team.players?.length || 0) + ' ' + escapeHtml(words().players) + scorerSourceLink + '</span></div>' + players +
             '<div class="staff-section"><div class="roster-heading"><h4>' + escapeHtml(staffTitle) + '</h4><span>' + (team.staff?.length || 0) + ' ' + escapeHtml(staffCount) + '</span></div>' + staff + '</div></div></section>';
