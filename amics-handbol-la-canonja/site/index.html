@@ -143,13 +143,14 @@
     .match-panel .round-link:hover { background: white; color: var(--blue); }
     .social-section { display: grid; grid-template-columns: .9fr 1.1fr; gap: 10%; align-items: center; padding-top: 15px; }
     .social-copy > p:not(.section-label) { max-width: 450px; margin-block: 22px 24px; color: var(--muted); font-size: 15px; line-height: 1.75; }
-    .social-card { position: relative; display: flex; min-height: 295px; flex-direction: column; align-items: flex-start; justify-content: space-between; overflow: hidden; padding: 27px; border-radius: 8px 30px 8px 30px; background: var(--lilac); }
-    .social-card::after { position: absolute; right: -44px; bottom: -90px; width: 250px; aspect-ratio: 1; border: 1px solid rgba(52,57,183,.28); border-radius: 50%; content: ""; box-shadow: 0 0 0 15px transparent, 0 0 0 16px rgba(52,57,183,.24), 0 0 0 33px transparent, 0 0 0 34px rgba(52,57,183,.2); }
-    .social-top { position: relative; z-index: 1; display: flex; width: 100%; align-items: center; justify-content: space-between; color: var(--blue); font-size: 10px; font-weight: 850; letter-spacing: .13em; text-transform: uppercase; }
-    .social-top svg { width: 19px; height: 19px; }
-    .social-card h3 { position: relative; z-index: 1; max-width: 380px; margin: 26px 0; font-size: clamp(28px, 4vw, 40px); font-weight: 820; letter-spacing: -.06em; line-height: 1.03; }
-    .social-card .round-link { position: relative; z-index: 1; border-color: var(--blue); color: var(--blue); }
-    .social-card .round-link:hover { background: var(--blue); color: white; }
+    .instagram-card { min-width: 0; padding: 18px; border: 1px solid var(--line); border-radius: 8px 30px 8px 30px; background: var(--white); box-shadow: 0 18px 48px rgba(25,24,54,.08); }
+    .instagram-card-top { display: flex; align-items: center; justify-content: space-between; gap: 14px; color: var(--blue); font-size: 10px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+    .instagram-account { display: inline-flex; align-items: center; gap: 9px; min-width: 0; }
+    .instagram-account svg { width: 19px; height: 19px; flex: 0 0 auto; }
+    .instagram-profile-link { flex: 0 0 auto; color: var(--blue); text-decoration-thickness: 1px; text-underline-offset: 4px; }
+    .instagram-post-frame { display: grid; min-height: 330px; place-items: center; overflow-x: auto; margin-top: 16px; border-radius: 14px; background: #f8f7ff; }
+    .instagram-post-status { max-width: 330px; margin: 0; padding: 26px; color: var(--muted); font-size: 13px; line-height: 1.7; text-align: center; }
+    .instagram-post-frame blockquote.instagram-media { width: 100% !important; max-width: 540px !important; min-width: 280px !important; margin: 0 auto !important; }
     .visit { padding-top: 20px; }
     .visit-inner { display: grid; grid-template-columns: 1.1fr .9fr; min-height: 390px; overflow: hidden; border-radius: 8px 30px 8px 30px; background: var(--lilac); }
     .join-copy { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: clamp(28px, 5vw, 62px); }
@@ -223,7 +224,8 @@
       .match { grid-template-columns: 1fr; gap: 27px; }
       .match-panel { min-height: 240px; padding: 22px; }
       .social-section { grid-template-columns: 1fr; gap: 27px; padding-top: 0; }
-      .social-card { min-height: 255px; padding: 22px; }
+      .instagram-card { padding: 12px; }
+      .instagram-post-frame { min-height: 330px; }
       .visit { padding-top: 0; }
       .visit-inner { grid-template-columns: 1fr; }
       .join-copy { padding: 32px 25px; }
@@ -347,12 +349,16 @@
       <div class="social-copy">
         <p class="section-label" data-ca="03 / Vida de club" data-es="03 / Vida de club">03 / Vida de club</p>
         <h2 data-ca-html="La temporada<br>també es viu<br><em>fora pista.</em>" data-es-html="La temporada<br>también se vive<br><em>fuera de pista.</em>">La temporada<br>també es viu<br><em>fora pista.</em></h2>
-        <p data-ca="Fotos, convocatòries i moments compartits: segueix el perfil oficial d’Amics Handbol per veure què passa al club." data-es="Fotos, convocatorias y momentos compartidos: sigue el perfil oficial de Amics Handbol para ver qué pasa en el club.">Fotos, convocatòries i moments compartits: segueix el perfil oficial d’Amics Handbol per veure què passa al club.</p>
+        <p data-ca="Les últimes notícies, els partits i els moments del club, directament des d’Instagram." data-es="Las últimas noticias, los partidos y los momentos del club, directamente desde Instagram.">Les últimes notícies, els partits i els moments del club, directament des d’Instagram.</p>
       </div>
-      <div class="social-card">
-        <div class="social-top"><span>@amicshandbolca</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.7"/><circle cx="17.5" cy="6.8" r="1" fill="currentColor"/></svg></div>
-        <h3 data-ca="Segueix la vida d’Amics H.C. des de dins." data-es="Sigue la vida de Amics H.C. desde dentro.">Segueix la vida d’Amics H.C. des de dins.</h3>
-        <a class="round-link" href="https://www.instagram.com/amicshandbolcanonja/" target="_blank" rel="noopener noreferrer"><span data-ca="Veure Instagram" data-es="Ver Instagram">Veure Instagram</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 15 15 5M6 5h9v9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <div class="instagram-card">
+        <div class="instagram-card-top">
+          <span class="instagram-account"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.7"/><circle cx="17.5" cy="6.8" r="1" fill="currentColor"/></svg>@amicshandbolcanonja</span>
+          <a class="instagram-profile-link" href="https://www.instagram.com/amicshandbolcanonja/" target="_blank" rel="noopener noreferrer" data-ca="Veure perfil ↗" data-es="Ver perfil ↗">Veure perfil ↗</a>
+        </div>
+        <div class="instagram-post-frame" id="instagram-post" role="region" aria-label="Publicacions recents d’Instagram" data-ca-label="Publicacions recents d’Instagram" data-es-label="Publicaciones recientes de Instagram">
+          <p class="instagram-post-status" id="instagram-status" data-ca="Carregant les publicacions recents…" data-es="Cargando las publicaciones recientes…">Carregant les publicacions recents…</p>
+        </div>
       </div>
     </section>
 
@@ -394,11 +400,16 @@
       const refreshLabel = document.getElementById("refresh-label");
       const menuButton = document.getElementById("menu-toggle");
       const siteNav = document.getElementById("primary-nav");
+      const instagramPostNode = document.getElementById("instagram-post");
+      const instagramProfileUrl = "https://www.instagram.com/amicshandbolcanonja/";
       let language = "ca";
       let siteData = null;
       let activeTeamKey = "";
       let lastLoad = 0;
       let loading = false;
+      let instagramStatusKey = "loading";
+      let instagramEmbedReady = false;
+      let instagramEmbedPromise = null;
 
       const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[character]));
       const formatDate = (iso) => {
@@ -436,6 +447,57 @@
           ? (language === "ca" ? "Tancar el menú" : "Cerrar el menú")
           : menuButton.dataset[language + "Label"]);
         refreshLabel.textContent = words().refresh;
+        if (!instagramEmbedReady) updateInstagramStatus();
+      }
+
+      function updateInstagramStatus() {
+        const messages = {
+          loading: ["Carregant les publicacions recents…", "Cargando las publicaciones recientes…"],
+          error: ["Instagram no pot mostrar el perfil aquí. Obre’l directament.", "Instagram no puede mostrar el perfil aquí. Ábrelo directamente."],
+        };
+        const status = document.createElement("p");
+        status.className = "instagram-post-status";
+        status.id = "instagram-status";
+        status.textContent = messages[instagramStatusKey][language === "ca" ? 0 : 1];
+        instagramPostNode.replaceChildren(status);
+      }
+
+      function loadInstagramEmbedScript() {
+        if (window.instgrm?.Embeds) return Promise.resolve();
+        if (instagramEmbedPromise) return instagramEmbedPromise;
+        instagramEmbedPromise = new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = "https://www.instagram.com/embed.js";
+          script.async = true;
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.append(script);
+        });
+        return instagramEmbedPromise;
+      }
+
+      async function loadInstagramProfile() {
+        try {
+          const embed = document.createElement("blockquote");
+          embed.className = "instagram-media";
+          embed.setAttribute("data-instgrm-permalink", instagramProfileUrl);
+          embed.setAttribute("data-instgrm-version", "14");
+          embed.style.width = "100%";
+          const link = document.createElement("a");
+          link.href = instagramProfileUrl;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.textContent = language === "ca" ? "Veure el perfil a Instagram" : "Ver el perfil en Instagram";
+          embed.append(link);
+          instagramPostNode.replaceChildren(embed);
+
+          await loadInstagramEmbedScript();
+          window.instgrm?.Embeds?.process();
+          instagramEmbedReady = true;
+        } catch {
+          instagramStatusKey = "error";
+          updateInstagramStatus();
+        }
       }
 
       function fixtureMarkup(team, fixture, nextRound) {
@@ -572,6 +634,7 @@
       updateStaticLanguage();
       document.getElementById("year").textContent = String(new Date().getFullYear());
       loadData();
+      loadInstagramProfile();
       window.setInterval(() => { if (document.visibilityState === "visible") loadData(); }, 5 * 60 * 1000);
       document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible" && Date.now() - lastLoad >= 5 * 60 * 1000) loadData();
