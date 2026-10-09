@@ -151,6 +151,7 @@
     .instagram-post-frame { display: grid; min-height: 330px; place-items: center; overflow-x: auto; margin-top: 16px; border-radius: 14px; background: #f8f7ff; }
     .instagram-post-status { max-width: 330px; margin: 0; padding: 26px; color: var(--muted); font-size: 13px; line-height: 1.7; text-align: center; }
     .instagram-post-frame blockquote.instagram-media { width: 100% !important; max-width: 540px !important; min-width: 280px !important; margin: 0 auto !important; }
+    .instagram-latest-link { display: flex; justify-content: center; margin: 14px auto 2px; color: var(--blue); font-size: 13px; font-weight: 800; text-underline-offset: 4px; }
     .visit { padding-top: 20px; }
     .visit-inner { display: grid; grid-template-columns: 1.1fr .9fr; min-height: 390px; overflow: hidden; border-radius: 8px 30px 8px 30px; background: var(--lilac); }
     .join-copy { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: clamp(28px, 5vw, 62px); }
@@ -356,9 +357,10 @@
           <span class="instagram-account"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.7"/><circle cx="17.5" cy="6.8" r="1" fill="currentColor"/></svg>@amicshandbolcanonja</span>
           <a class="instagram-profile-link" href="https://www.instagram.com/amicshandbolcanonja/" target="_blank" rel="noopener noreferrer" data-ca="Veure perfil ↗" data-es="Ver perfil ↗">Veure perfil ↗</a>
         </div>
-        <div class="instagram-post-frame" id="instagram-post" role="region" aria-label="Publicacions recents d’Instagram" data-ca-label="Publicacions recents d’Instagram" data-es-label="Publicaciones recientes de Instagram">
-          <p class="instagram-post-status" id="instagram-status" data-ca="Carregant les publicacions recents…" data-es="Cargando las publicaciones recientes…">Carregant les publicacions recents…</p>
+        <div class="instagram-post-frame" id="instagram-post" role="region" aria-label="Última publicació d’Instagram" data-ca-label="Última publicació d’Instagram" data-es-label="Última publicación de Instagram">
+          <p class="instagram-post-status" id="instagram-status" data-ca="Carregant l’última publicació…" data-es="Cargando la última publicación…">Carregant l’última publicació…</p>
         </div>
+        <a class="instagram-latest-link" id="instagram-latest-link" href="https://www.instagram.com/amicshandbolcanonja/" target="_blank" rel="noopener noreferrer" data-ca="Veure el perfil ↗" data-es="Ver el perfil ↗">Veure el perfil ↗</a>
       </div>
     </section>
 
@@ -401,6 +403,7 @@
       const menuButton = document.getElementById("menu-toggle");
       const siteNav = document.getElementById("primary-nav");
       const instagramPostNode = document.getElementById("instagram-post");
+      const instagramLatestLink = document.getElementById("instagram-latest-link");
       const instagramProfileUrl = "https://www.instagram.com/amicshandbolcanonja/";
       let language = "ca";
       let siteData = null;
@@ -410,6 +413,8 @@
       let instagramStatusKey = "loading";
       let instagramEmbedReady = false;
       let instagramEmbedPromise = null;
+      let instagramPostUrl = instagramProfileUrl;
+      let instagramPostIsLatest = false;
 
       const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[character]));
       const formatDate = (iso) => {
@@ -447,13 +452,21 @@
           ? (language === "ca" ? "Tancar el menú" : "Cerrar el menú")
           : menuButton.dataset[language + "Label"]);
         refreshLabel.textContent = words().refresh;
+        updateInstagramLink();
         if (!instagramEmbedReady) updateInstagramStatus();
+      }
+
+      function updateInstagramLink() {
+        instagramLatestLink.href = instagramPostUrl;
+        instagramLatestLink.textContent = instagramPostIsLatest
+          ? (language === "ca" ? "Veure la publicació ↗" : "Ver la publicación ↗")
+          : (language === "ca" ? "Veure el perfil ↗" : "Ver el perfil ↗");
       }
 
       function updateInstagramStatus() {
         const messages = {
-          loading: ["Carregant les publicacions recents…", "Cargando las publicaciones recientes…"],
-          error: ["Instagram no pot mostrar el perfil aquí. Obre’l directament.", "Instagram no puede mostrar el perfil aquí. Ábrelo directamente."],
+          loading: ["Carregant l’última publicació…", "Cargando la última publicación…"],
+          error: ["Instagram no pot mostrar la publicació aquí. Obre-la amb l’enllaç.", "Instagram no puede mostrar la publicación aquí. Ábrela con el enlace."],
         };
         const status = document.createElement("p");
         status.className = "instagram-post-status";
@@ -478,16 +491,31 @@
 
       async function loadInstagramProfile() {
         try {
+          try {
+            const response = await fetch("./api/instagram.json", { cache: "no-store" });
+            if (response.ok) {
+              const latestPost = await response.json();
+              const candidate = new URL(latestPost.permalink);
+              if (candidate.hostname === "www.instagram.com" && /^\/(p|reel|tv)\/[A-Za-z0-9_-]+\/?$/.test(candidate.pathname)) {
+                instagramPostUrl = candidate.href;
+                instagramPostIsLatest = true;
+              }
+            }
+          } catch {}
+          updateInstagramLink();
+
           const embed = document.createElement("blockquote");
           embed.className = "instagram-media";
-          embed.setAttribute("data-instgrm-permalink", instagramProfileUrl);
+          embed.setAttribute("data-instgrm-permalink", instagramPostUrl);
           embed.setAttribute("data-instgrm-version", "14");
           embed.style.width = "100%";
           const link = document.createElement("a");
-          link.href = instagramProfileUrl;
+          link.href = instagramPostUrl;
           link.target = "_blank";
           link.rel = "noopener noreferrer";
-          link.textContent = language === "ca" ? "Veure el perfil a Instagram" : "Ver el perfil en Instagram";
+          link.textContent = instagramPostIsLatest
+            ? (language === "ca" ? "Veure la publicació a Instagram" : "Ver la publicación en Instagram")
+            : (language === "ca" ? "Veure el perfil a Instagram" : "Ver el perfil en Instagram");
           embed.append(link);
           instagramPostNode.replaceChildren(embed);
 
