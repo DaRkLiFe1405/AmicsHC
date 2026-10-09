@@ -98,6 +98,25 @@ function parsePlayers(html) {
   return [...new Set(players)].sort((a, b) => a.localeCompare(b, "ca"));
 }
 
+function parseStaff(html) {
+  const table = html.match(/<table\b[^>]*\btabla-plantilla\b[^>]*>[\s\S]*?<\/table>/i)?.[0] ?? "";
+  const rows = [...table.matchAll(/<tr\b[^>]*>[\s\S]*?<\/tr>/gi)].map((match) => match[0]);
+  const staff = [];
+  const seen = new Set();
+  for (const row of rows) {
+    const cells = [...row.matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/gi)].map((match) => match[1]);
+    const role = textFromHtml(cells[1] ?? "");
+    if (!role || /^(jugador|invitado)$/i.test(role)) continue;
+    const imageAlt = row.match(/<img\b[^>]*\balt=["']([^"']+)["']/i)?.[1] ?? "";
+    const name = imageAlt ? decodeEntities(imageAlt).trim() : textFromHtml(cells[0] ?? "");
+    const key = name.toLowerCase() + "|" + role.toLowerCase();
+    if (!name || seen.has(key)) continue;
+    seen.add(key);
+    staff.push({ name, role });
+  }
+  return staff;
+}
+
 function parseTopScorers(html, team) {
   const table = html.match(/<table\b[^>]*\btabla_goleadores\b[^>]*>[\s\S]*?<\/table>/i)?.[0] ?? "";
   const rows = [...table.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)].map((match) => match[1]);
@@ -292,6 +311,7 @@ async function buildData() {
       clubLabel: sourceRow?.clubLabel ?? "Amics H.C.",
       categoryLabel: sourceRow?.categoryLabel ?? "",
       players: rosterHtml ? parsePlayers(rosterHtml) : [],
+      staff: rosterHtml ? parseStaff(rosterHtml) : [],
       topScorers: scorersHtml ? parseTopScorers(scorersHtml, team) : [],
       scorersUrl: hasScorersPage ? statisticsUrlForTeam(team) : "",
       fixtures: rosterHtml ? parseTeamFixtures(rosterHtml, team) : [],

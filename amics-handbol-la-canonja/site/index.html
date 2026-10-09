@@ -257,10 +257,15 @@
     .roster-player { min-height: 41px; padding: 11px 13px; border: 1px solid rgba(25,24,54,.1); border-radius: 9px; background: #f8f7ff; color: var(--ink); font-size: 11px; font-weight: 700; line-height: 1.4; }
     .roster-player.is-top-scorer { display: flex; align-items: center; justify-content: space-between; gap: 8px; border-color: var(--violet); background: #f0efff; }
     .top-scorer-emoji { flex: 0 0 auto; font-size: 15px; line-height: 1; }
+    .staff-section { margin-top: 24px; padding-top: 22px; border-top: 1px solid var(--line); }
+    .staff-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; margin: 0; padding: 0; list-style: none; }
+    .staff-member { display: grid; min-width: 0; gap: 5px; padding: 11px 13px; border: 1px solid rgba(25,24,54,.1); border-radius: 9px; background: #f8f7ff; }
+    .staff-member strong { color: var(--ink); font-size: 11px; line-height: 1.4; overflow-wrap: anywhere; }
+    .staff-member span { color: var(--muted); font-size: 10px; font-weight: 750; line-height: 1.3; }
     .fixture-empty { grid-column: 1 / -1; min-height: 145px; padding: 25px; border: 1px dashed rgba(25,24,54,.24); border-radius: 14px; background: #f8f7f2; color: var(--muted); font-size: 13px; line-height: 1.7; }
     .fixture-empty strong { display: block; margin-bottom: 7px; color: var(--ink); font-size: 17px; }
-    @media (max-width: 760px) { .roster-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 520px) { .sync-toolbar { align-items: flex-start; } .roster-grid { grid-template-columns: 1fr; } .fixture-list { grid-template-columns: 1fr; } }
+    @media (max-width: 760px) { .roster-grid, .staff-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 520px) { .sync-toolbar { align-items: flex-start; } .roster-grid, .staff-grid { grid-template-columns: 1fr; } .fixture-list { grid-template-columns: 1fr; } }
 
   </style>
 </head>
@@ -460,6 +465,17 @@
         if (!instagramEmbedReady) updateInstagramStatus();
       }
 
+      function staffRoleLabel(role) {
+        const key = String(role ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
+        const labels = {
+          entrenador: "Entrenador/a",
+          "ayte entrenador": language === "ca" ? "Entrenador/a ajudant" : "Ayudante de entrenador/a",
+          oficial: "Oficial",
+          "staff adicional": language === "ca" ? "Staff addicional" : "Staff adicional",
+        };
+        return labels[key] || role;
+      }
+
       function updateInstagramLink() {
         instagramLatestLink.href = instagramPostUrl;
         instagramLatestLink.textContent = instagramPostIsLatest
@@ -588,6 +604,9 @@
           const scorerSourceLink = team.scorersUrl
             ? ' · <a href="' + escapeHtml(team.scorersUrl) + '" target="_blank" rel="noopener noreferrer">' + (language === "ca" ? "Golejadors FCH" : "Goleadores FCH") + ' ↗</a>'
             : "";
+          const staffTitle = language === "ca" ? "Cos tècnic" : "Cuerpo técnico";
+          const staffCount = language === "ca" ? "persones" : "personas";
+          const staffEmpty = language === "ca" ? "La federació encara no ha publicat el cos tècnic." : "La federación todavía no ha publicado el cuerpo técnico.";
           const calendar = fixtures.length
             ? '<div class="fixture-list" role="list" aria-label="' + escapeHtml(language === "ca" ? "Partits de " + title : "Partidos de " + title) + '">' + fixtures.map((fixture) => fixtureMarkup(team, fixture, next)).join("") + '</div>'
             : '<div class="fixture-empty"><strong>' + escapeHtml(words().noFixtures) + '</strong>' + escapeHtml(words().noFixturesText) + '</div>';
@@ -600,10 +619,14 @@
               return '<li class="roster-player' + (isTopScorer ? ' is-top-scorer' : '') + '">' + escapeHtml(player) + badge + '</li>';
             }).join("") + '</ol>'
             : '<p class="calendar-note">' + escapeHtml(words().noPlayers) + '</p>';
+          const staff = team.staff?.length
+            ? '<ul class="staff-grid" aria-label="' + escapeHtml(staffTitle) + '">' + team.staff.map((member) => '<li class="staff-member"><strong>' + escapeHtml(member.name) + '</strong><span>' + escapeHtml(staffRoleLabel(member.role)) + '</span></li>').join("") + '</ul>'
+            : '<p class="calendar-note">' + escapeHtml(staffEmpty) + '</p>';
           return '<section class="schedule-panel" role="tabpanel" id="schedule-' + escapeHtml(team.key) + '" aria-labelledby="tab-' + escapeHtml(team.key) + '"' + (active ? '' : ' hidden') + '>' +
             '<div class="schedule-heading"><div><p class="section-label">' + escapeHtml(words().calendar) + ' · ' + escapeHtml(siteData.season) + '</p><h3>' + escapeHtml(title) + '</h3><p>' + escapeHtml(competition) + '</p></div><span class="schedule-stamp">' + fixtures.length + ' ' + escapeHtml(words().fixtures) + '</span></div>' +
             calendar + '<p class="calendar-note">' + escapeHtml(words().update) + '</p>' +
-            '<div class="roster-section"><div class="roster-heading"><h4>' + escapeHtml(words().roster) + '</h4><span>' + (team.players?.length || 0) + ' ' + escapeHtml(words().players) + scorerSourceLink + '</span></div>' + players + '</div></section>';
+            '<div class="roster-section"><div class="roster-heading"><h4>' + escapeHtml(words().roster) + '</h4><span>' + (team.players?.length || 0) + ' ' + escapeHtml(words().players) + scorerSourceLink + '</span></div>' + players +
+            '<div class="staff-section"><div class="roster-heading"><h4>' + escapeHtml(staffTitle) + '</h4><span>' + (team.staff?.length || 0) + ' ' + escapeHtml(staffCount) + '</span></div>' + staff + '</div></div></section>';
         });
         panelsNode.innerHTML = panels.join("");
       }
