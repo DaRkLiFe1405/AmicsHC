@@ -98,6 +98,22 @@ function parsePlayers(html) {
   return [...new Set(players)].sort((a, b) => a.localeCompare(b, "ca"));
 }
 
+function parseTopScorers(html, team) {
+  const table = html.match(/<table\b[^>]*\btabla_goleadores\b[^>]*>[\s\S]*?<\/table>/i)?.[0] ?? "";
+  const rows = [...table.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)].map((match) => match[1]);
+  const scorers = rows.flatMap((row) => {
+    const teamId = row.match(/<a\b[^>]*href=["'][^"']*\bid_equipo=(\d+)/i)?.[1] ?? "";
+    if (teamId !== team.id) return [];
+    const cells = [...row.matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/gi)].map((match) => match[1]);
+    const name = textFromHtml(cells[1] ?? "");
+    const goals = Number(textFromHtml(cells[3] ?? ""));
+    return name && Number.isFinite(goals) ? [{ name, goals }] : [];
+  });
+  if (!scorers.length) return [];
+  const maximumGoals = Math.max(...scorers.map((scorer) => scorer.goals));
+  return [...new Set(scorers.filter((scorer) => scorer.goals === maximumGoals).map((scorer) => scorer.name))];
+}
+
 function parseDate(value) {
   const match = value.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
   if (!match) return "";
@@ -210,6 +226,20 @@ function calendarUrlForTeam(team, tournament = team.tournament) {
   return `${SOURCE_ORIGIN}/calendario.php?${params}`;
 }
 
+function statisticsUrlForTeam(team) {
+  const params = new URLSearchParams({
+    id: team.tournament,
+    id_ambito: "0",
+    id_categoria: team.category,
+    id_competicion: team.competition,
+    id_superficie: "1",
+    id_territorial: "17",
+    iframe: "0",
+    seleccion: "0",
+  });
+  return SOURCE_ORIGIN + "/estadisticas.php?" + params.toString();
+}
+
 function parseTournamentOptions(html) {
   const select = html.match(/<select\b[^>]*\bid=["']torneos["'][^>]*>[\s\S]*?<\/select>/i)?.[0] ?? "";
   const options = [...select.matchAll(/<option\b([^>]*)>/gi)].flatMap((match) => {
@@ -247,18 +277,23 @@ async function buildData() {
   const byId = new Map(clubRows.map((team) => [team.id, team]));
 
   const teams = await mapLimit(currentSeasonTeams, 3, async (team) => {
-    const [rosterResult, scheduleResult] = await Promise.allSettled([
+    const hasScorersPage = team.key === "senior-masculi";
+    const [rosterResult, scheduleResult, scorersResult] = await Promise.allSettled([
       fetchHtml(pageUrlForTeam(team)),
       fetchTeamCalendar(team),
+      hasScorersPage ? fetchHtml(statisticsUrlForTeam(team)) : Promise.resolve(""),
     ]);
     const sourceRow = byId.get(team.id);
     const rosterHtml = rosterResult.status === "fulfilled" ? rosterResult.value : "";
     const calendarFixtures = scheduleResult.status === "fulfilled" ? scheduleResult.value : [];
+    const scorersHtml = scorersResult.status === "fulfilled" ? scorersResult.value : "";
     return {
       ...team,
       clubLabel: sourceRow?.clubLabel ?? "Amics H.C.",
       categoryLabel: sourceRow?.categoryLabel ?? "",
       players: rosterHtml ? parsePlayers(rosterHtml) : [],
+      topScorers: scorersHtml ? parseTopScorers(scorersHtml, team) : [],
+      scorersUrl: hasScorersPage ? statisticsUrlForTeam(team) : "",
       fixtures: rosterHtml ? parseTeamFixtures(rosterHtml, team) : [],
       calendarFixtures,
       rosterAvailable: rosterResult.status === "fulfilled",
